@@ -12,13 +12,13 @@ import           Data.Ord                    (comparing)
 import           Data.Vector                 (Vector)
 import qualified Data.Vector                 as Boxed
 import qualified Data.Vector.Mutable         as MVector
+import qualified Data.Vector.Unboxed         as Unboxed
 import           VectorBuilder.Builder       (Builder)
 import qualified VectorBuilder.Builder       as VB
 import           VectorBuilder.Vector        (build)
-import qualified Data.Vector.Unboxed as Unboxed
 
-import AI.Cluster.Types
-import AI.Utility
+import           AI.Cluster.Types
+import           AI.Utility
 
 
 
@@ -43,7 +43,7 @@ lloydMeans kMeans inputs ClusterOpts{..} = go 0
 
         newClusters :: Cluster a
         newClusters = assignClusters newClusterPoints inputs
-        
+
         newAssignment :: Vector (Unboxed.Vector a)
         newAssignment = assignment newClusters
       in
@@ -62,7 +62,7 @@ assignClusters
 assignClusters clusterPoints inputs = Cluster{..}
   where
     numberOfClusters = length clusterPoints
-    
+
     assignment = build <$> assignmentBuilder
 
     assignmentBuilder :: Vector (Builder a)
@@ -89,7 +89,7 @@ assignClusters clusterPoints inputs = Cluster{..}
            let clusterLabel = nearest a
            MVector.modify mVec (<> (VB.singleton a)) clusterLabel
 
-      
+
         nearest :: a -> Int
         nearest a = fst $ minimumBy (comparing (clusterDist a)) clusterPoints
 

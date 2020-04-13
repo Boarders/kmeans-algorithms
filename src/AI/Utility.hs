@@ -4,10 +4,10 @@ module AI.Utility where
 
 import           Control.Parallel.Strategies hiding (parMap)
 import           Data.Vector                 (Vector)
+import qualified Data.Vector.Unboxed         as Unboxed
 import           VectorBuilder.Builder       (Builder)
 import qualified VectorBuilder.Builder       as Builder
 import           VectorBuilder.Vector        (build)
-import qualified Data.Vector.Unboxed as Unboxed
 
 chunksOf
   :: forall a . (Unboxed.Unbox a)

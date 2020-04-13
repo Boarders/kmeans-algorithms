@@ -1,15 +1,15 @@
 module AI.Cluster where
 
 
-import Data.Vector
-import qualified Data.Vector.Unboxed as Unboxed
+import           Data.Vector
+import qualified Data.Vector.Unboxed        as Unboxed
 
-import AI.Cluster.LloydsAlgorithm
+import           AI.Cluster.LloydsAlgorithm
 --import AI.Cluster.Initialise
-import AI.Cluster.Types
+import           AI.Cluster.Types
 
 
-data InitialiseOptions = 
+data InitialiseOptions =
     RGC
   | RP
   | RUNFP

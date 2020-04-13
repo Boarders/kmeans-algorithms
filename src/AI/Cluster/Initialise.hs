@@ -1,9 +1,8 @@
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE LambdaCase          #-}
+{-# LANGUAGE RankNTypes          #-}
+{-# LANGUAGE RecordWildCards     #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE LambdaCase  #-}
-{-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE TypeApplications    #-}
 
 
 
@@ -17,7 +16,7 @@ module AI.Cluster.Initialise where
 -- import           VectorBuilder.Builder       (Builder)
 -- import qualified VectorBuilder.Builder       as VB
 -- import           VectorBuilder.Vector        (build)
--- import           Control.Monad.Random.Class  
+-- import           Control.Monad.Random.Class
 -- import Control.Monad.Primitive
 -- import AI.Cluster.LloydsAlgorithm
 -- import System.Random.MWC.Probability (Prob, GenIO)
@@ -33,7 +32,7 @@ module AI.Cluster.Initialise where
 --import AI.Utility
 
 
-{-- 
+{--
 randomInitialAssignment
   :: forall a
   .  (Vector a -> a)
@@ -94,7 +93,7 @@ kmpp _ inputs ClusterOpts{..} = do
       KMeansPlusPlus{..} <- go gen (numberOfClusters - 1) initialKMPP
       let finalClusterPts = build _clusterPts
       pure $ assignClusters finalClusterPts inputs
-  where  
+  where
     go :: GenIO -> Int -> KMeansPlusPlus a -> IO (KMeansPlusPlus a )
     go _ 0 km = pure km
     go g n ~KMeansPlusPlus{..} = do
@@ -106,7 +105,7 @@ kmpp _ inputs ClusterOpts{..} = do
       let newClusts = _clusterPts <> (VB.singleton clusterPt)
       let newKmeans = KMeansPlusPlus newDists newClusts
       go g (n - 1) newKmeans
-        
+
 
 
 data KMeansPlusPlus a = KMeansPlusPlus

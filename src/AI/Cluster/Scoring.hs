@@ -7,8 +7,8 @@ import           Data.Monoid                 (Sum)
 import qualified Data.Vector                 as Boxed
 import qualified Data.Vector.Unboxed         as Unboxed
 
-import AI.Cluster.Types
-import AI.Utility
+import           AI.Cluster.Types
+import           AI.Utility
 
 
 scoreClusters

@@ -1,8 +1,8 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module AI.Cluster.Types where
 
-import           Data.Monoid                 (Sum)
-import qualified Data.Vector as Boxed
+import           Data.Monoid         (Sum)
+import qualified Data.Vector         as Boxed
 import qualified Data.Vector.Unboxed as Unboxed
 
 class HasDistance a where
@@ -21,8 +21,8 @@ data Point2 = Point2
 
 data Point3 = Point3
   { x3 :: {-# UNPACK #-} !Double
-  , y3 :: {-# UNPACK #-} !Double 
-  , z3 :: {-# UNPACK #-} !Double 
+  , y3 :: {-# UNPACK #-} !Double
+  , z3 :: {-# UNPACK #-} !Double
   }
   deriving (Ord, Eq)
 
