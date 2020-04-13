@@ -87,7 +87,7 @@ assignClusters clusterPoints inputs = Cluster{..}
       let
         addPoint a = do
            let clusterLabel = nearest a
-           MVector.modify mVec (<> (VB.singleton a)) clusterLabel
+           MVector.modify mVec (<> VB.singleton a) clusterLabel
 
 
         nearest :: a -> Int
@@ -101,6 +101,3 @@ assignClusters clusterPoints inputs = Cluster{..}
 
     combine :: Int -> Vector (Vector (Builder a)) -> Vector (Builder a)
     combine l = foldr (Boxed.zipWith (<>)) (Boxed.replicate l mempty)
-
-
-
