@@ -32,18 +32,18 @@ Library
 
   ghc-options:      -Wall
 
-  build-depends:    base            ^>= 4.12.0.0
+  build-depends:    base
                   , MonadRandom     >= 0.5.1.1  && < 0.6
-                  , monad-primitive ^>= 0.1
-                  , mtl             ^>= 2.2.2
-                  , mwc-probability ^>= 2.0.4
-                  , parallel        ^>= 3.2.2.0
+                  , monad-primitive >= 0.1
+                  , mtl             >= 2.2.2
+                  , mwc-probability >= 2.0.4
+                  , parallel        >= 3.2.2.0
                   , perfect-vector-shuffle >= 0.1.1
-                  , primitive       >= 0.6.4.0  && < 0.7
-                  , probability     ^>= 0.2.5.2
-                  , random          ^>= 1.1
+                  , primitive
+                  , probability     >= 0.2.5.2
+                  , random          >= 1.1
                   , vector          >= 0.12.0   && < 0.13
-                  , vector-builder  ^>= 0.3.7.2
+                  , vector-builder  >= 0.3.7.2
 
   exposed-modules:  AI.Cluster
                     AI.Cluster.Types
@@ -67,12 +67,12 @@ Test-Suite testsuite
   ghc-options:      -Wall
                     -Wincomplete-patterns
 
-  build-depends:    kmeans-algorithms      ^>= 0.1.0
-                  , base                   ^>= 4.12.0.0
-                  , QuickCheck             ^>= 2.12.6.1
-                  , random                 ^>= 1.1
+  build-depends:    kmeans-algorithms      >= 0.1.0
+                  , base
+                  , QuickCheck             >= 2.12.6.1
+                  , random                 >= 1.1
                   , tasty                  >= 1.2    && < 1.3
-                  , tasty-quickcheck       ^>= 0.10
+                  , tasty-quickcheck       >= 0.10
                   , vector                 >= 0.12.0 && < 0.13
                   , quickcheck-instances   >= 0.3.19 && < 0.4
 
