@@ -10,88 +10,97 @@ import           Data.Foldable
 import           Data.Monoid                 (Sum)
 import           Data.Ord                    (comparing)
 import           Data.Vector                 (Vector)
-import qualified Data.Vector                 as V
+import qualified Data.Vector                 as Boxed
 import qualified Data.Vector.Mutable         as MVector
 import           VectorBuilder.Builder       (Builder)
 import qualified VectorBuilder.Builder       as VB
 import           VectorBuilder.Vector        (build)
+import qualified Data.Vector.Unboxed as Unboxed
 
 import AI.Cluster.Types
 import AI.Utility
 
 
 
-lloydMedians
-  :: forall a . (HasDistance a, Eq a)
-  => (Vector a -> a)
-  -> Vector a
+lloydMeans
+  :: forall a . (HasDistance a, Eq a, Unboxed.Unbox a)
+  => (Unboxed.Vector a -> a)
+  -> Unboxed.Vector a
   -> ClusterOpts
   -> Cluster a
   -> Cluster a
-lloydMedians kMedian inputs ClusterOpts{..} = go 0
+lloydMeans kMeans inputs ClusterOpts{..} = go 0
   where
     go :: Int -> Cluster a -> Cluster a
+    go iter currClusters | iter >= numberOfIterations = currClusters
     go iter currClusters =
       let
-        currAssignmentV :: Vector (Vector a)
-        currAssignmentV  = assignment currClusters
-        newClusterPoints = V.indexed (kMedian <$> currAssignmentV)
-        newCluster = assignClusters newClusterPoints inputs
-        newAssignmentV :: Vector (Vector a)
-        newAssignmentV = assignment newCluster
+        currAssignment :: Vector (Unboxed.Vector a)
+        currAssignment  = assignment currClusters
+
+        newClusterPoints :: Boxed.Vector (Int, a)
+        newClusterPoints = Boxed.indexed (fmap kMeans currAssignment)
+
+        newClusters :: Cluster a
+        newClusters = assignClusters newClusterPoints inputs
+        
+        newAssignment :: Vector (Unboxed.Vector a)
+        newAssignment = assignment newClusters
       in
-        if iter >= numberOfIterations then
-        currClusters
+        if currAssignment == newAssignment then
+             newClusters
         else
-           if currAssignmentV == newAssignmentV then
-             newCluster
-           else
-             go (iter + 1) newCluster
+          go (iter + 1) newClusters
 
 
 
 assignClusters
-  :: forall a . (HasDistance a)
+  :: forall a . (HasDistance a, Unboxed.Unbox a)
   => Vector (Int, a)
-  -> Vector a
+  -> Unboxed.Vector a
   -> Cluster a
 assignClusters clusterPoints inputs = Cluster{..}
   where
     numberOfClusters = length clusterPoints
-    assignment = build <$> assignmentB
-    assignmentB :: Vector (Builder a)
-    assignmentB =
-      let
-        numberOfInputs   = length inputs
+    
+    assignment = build <$> assignmentBuilder
 
-        chunkedInputs = chunksOf
-                          (max (floor @Double . log . fromIntegral $ numberOfInputs) 10)
-                          inputs
+    assignmentBuilder :: Vector (Builder a)
+    assignmentBuilder =
+      let
+        numberOfInputs   = Unboxed.length inputs
+
+        chunkedInputs :: Vector (Unboxed.Vector a)
+        chunkedInputs =
+          chunksOf (max (floor @Double . log . fromIntegral $ numberOfInputs) 1000) inputs
+        partialClusters :: Vector (Vector (Builder a))
         partialClusters = parFmap rpar assign chunkedInputs
+
+        combinedClusters :: Vector (Builder a)
         combinedClusters = combine numberOfClusters partialClusters
       in
         combinedClusters
 
-    assign :: Vector a -> Vector (Builder a)
-    assign inputVector = V.create $ do
-      vec <- MVector.replicate numberOfClusters VB.empty
+    assign :: Unboxed.Vector a -> Vector (Builder a)
+    assign inputVector = Boxed.create $ do
+      mVec <- MVector.replicate numberOfClusters VB.empty
       let
         addPoint a = do
            let clusterLabel = nearest a
-           currCluster <- MVector.read vec clusterLabel
-           MVector.write vec clusterLabel $ currCluster <> VB.singleton a
+           MVector.modify mVec (<> (VB.singleton a)) clusterLabel
 
+      
         nearest :: a -> Int
-        nearest a = fst $ minimumBy (comparing (f a)) clusterPoints
+        nearest a = fst $ minimumBy (comparing (clusterDist a)) clusterPoints
 
-        f :: a -> ((Int, a) -> Sum Double)
-        f inp  (_, clusterPoint) = dist inp clusterPoint
+        clusterDist :: a -> ((Int, a) -> Sum Double)
+        clusterDist inp  (_, clusterPoint) = dist inp clusterPoint
 
-      traverse_ addPoint inputVector
-      pure vec
+      Unboxed.mapM_ addPoint inputVector
+      pure mVec
 
     combine :: Int -> Vector (Vector (Builder a)) -> Vector (Builder a)
-    combine l = foldr (V.zipWith (<>)) (V.replicate l mempty)
+    combine l = foldr (Boxed.zipWith (<>)) (Boxed.replicate l mempty)
 
 
 

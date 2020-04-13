@@ -1,9 +1,11 @@
 module AI.Cluster where
 
-import AI.Cluster.LloydsAlgorithm
-import AI.Cluster.Initialise
-import Data.Vector
 
+import Data.Vector
+import qualified Data.Vector.Unboxed as Unboxed
+
+import AI.Cluster.LloydsAlgorithm
+--import AI.Cluster.Initialise
 import AI.Cluster.Types
 
 
@@ -16,14 +18,15 @@ data InitialiseOptions =
   | GREP
 
 kMeansCluster
-  :: (HasDistance a, Ord a)
-  => (Vector a -> a)
-  -> Vector a
+  :: (HasDistance a, Ord a, Unboxed.Unbox a)
+  => (Unboxed.Vector a -> a)
+  -> Unboxed.Vector a
   -> ClusterOpts
-  -> Vector (Vector a)
-kMeansCluster kMedians inputs opts =
+  -> Vector (Unboxed.Vector a)
+kMeansCluster kMeans inputs opts =
   let
-     initial  = initialAssignment kMedians inputs opts
-     final    = lloydMedians kMedians inputs opts initial
+  --   initial  = initialAssignment kMedians inputs opts
+     initial  = undefined
+     final    = lloydMeans kMeans inputs opts initial
   in
     assignment final

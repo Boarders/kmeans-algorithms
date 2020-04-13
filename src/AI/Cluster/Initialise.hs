@@ -11,27 +11,29 @@
 
 module AI.Cluster.Initialise where
 
-import           Data.Vector                 (Vector, (!))
-import qualified Data.Vector                 as V
-import           Immutable.Shuffle           (shuffleM, sampleWithoutReplacement)
-import           VectorBuilder.Builder       (Builder)
-import qualified VectorBuilder.Builder       as VB
-import           VectorBuilder.Vector        (build)
-import           Control.Monad.Random.Class  
-import Control.Monad.Primitive
-import AI.Cluster.LloydsAlgorithm
-import System.Random.MWC.Probability (Prob, GenIO)
-import Data.Coerce
-import Data.Monoid (Sum(..))
-import qualified System.Random.MWC.Probability as MWCP
-import Control.Monad.State.Strict
-import Data.Foldable
-import Data.List (findIndex)
+-- import           Data.Vector                 (Vector, (!))
+-- import qualified Data.Vector                 as V
+-- import           Immutable.Shuffle           (shuffleM, sampleWithoutReplacement)
+-- import           VectorBuilder.Builder       (Builder)
+-- import qualified VectorBuilder.Builder       as VB
+-- import           VectorBuilder.Vector        (build)
+-- import           Control.Monad.Random.Class  
+-- import Control.Monad.Primitive
+-- import AI.Cluster.LloydsAlgorithm
+-- import System.Random.MWC.Probability (Prob, GenIO)
+-- import Data.Coerce
+-- import Data.Monoid (Sum(..))
+-- import qualified System.Random.MWC.Probability as MWCP
+-- import Control.Monad.State.Strict
+-- import Data.Foldable
+-- import Data.List (findIndex)
 
 
-import AI.Cluster.Types
-import AI.Utility
+--import AI.Cluster.Types
+--import AI.Utility
 
+
+{-- 
 randomInitialAssignment
   :: forall a
   .  (Vector a -> a)
@@ -131,3 +133,4 @@ categorical ps = do
 
 cumulative :: forall a . Num a => [a] -> ([a], a)
 cumulative as = let acc = scanl1 (+) as in (acc, sum as)
+-}
