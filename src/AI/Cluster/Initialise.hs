@@ -11,7 +11,8 @@
 module AI.Cluster.Initialise where
 
 -- import           Data.Vector                 (Vector, (!))
--- import qualified Data.Vector                 as V
+-- import qualified Data.Vector                 as Boxed
+import qualified Data.Vector.Unboxed as Unboxed
 -- import           Immutable.Shuffle           (shuffleM, sampleWithoutReplacement)
 -- import           VectorBuilder.Builder       (Builder)
 -- import qualified VectorBuilder.Builder       as VB
