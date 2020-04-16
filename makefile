@@ -1,5 +1,8 @@
 code-dirs = src
 
+default:
+	cabal run plot-clusters && xdg-open "gaussian.png"
+
 hlint:
 	hlint --no-exit-code $(code-dirs)
 
