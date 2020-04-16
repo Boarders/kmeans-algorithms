@@ -1,9 +1,20 @@
 {-# LANGUAGE ScopedTypeVariables #-}
-module AI.Cluster.Types where
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies #-}
+module AI.Cluster.Types
+  ( HasDistance(..)
+  , Point2(..)
+  , Point3(..)
+  , Cluster(..)
+  , ClusterOpts(..)
+  )
+  where
 
 import           Data.Monoid         (Sum)
 import qualified Data.Vector         as Boxed
 import qualified Data.Vector.Unboxed as Unboxed
+import Data.Vector.Unboxed.Deriving
 
 class HasDistance a where
   dist :: a -> a -> Sum Double
@@ -37,4 +48,12 @@ data ClusterOpts = ClusterOpts
   , numberOfIterations :: {-# UNPACK #-} !Int
   }
 
+derivingUnbox "Point2"
+    [t| Point2 -> (Double, Double) |]
+    [| \ (Point2 x y) -> (x, y)|]
+    [| \ (x, y) -> Point2 x y |]
 
+derivingUnbox "Point3"
+    [t| Point3 -> (Double, Double, Double) |]
+    [| \ (Point3 x y z) -> (x, y, z)|]
+    [| \ (x, y, z) -> Point3 x y z |]
