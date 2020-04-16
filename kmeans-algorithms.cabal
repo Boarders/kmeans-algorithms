@@ -26,6 +26,28 @@ source-repository head
   location: https://github.com/Boarders/kmeans-algorithms
 
 
+executable plot-clusters
+      
+  type:             exitcode-stdio-1.0
+
+  main-is:          Plot.hs
+
+  hs-source-dirs:   app
+
+  ghc-options:      -Wall
+                    -Wincomplete-patterns
+
+  build-depends:    kmeans-algorithms      >= 0.1.0
+                  , base
+                  , random                 >= 1.1
+                  , vector                 >= 0.12.0 && < 0.13
+                  , Chart
+                  , Chart-cairo
+                  , mwc-random
+                  , primitive
+                  , lens
+                  , colour
+
 Library
 
   hs-source-dirs:   src
@@ -44,6 +66,7 @@ Library
                   , random          >= 1.1
                   , vector          >= 0.12.0   && < 0.13
                   , vector-builder  >= 0.3.7.2
+                  , vector-th-unbox
 
   exposed-modules:  AI.Cluster
                     AI.Cluster.Types
